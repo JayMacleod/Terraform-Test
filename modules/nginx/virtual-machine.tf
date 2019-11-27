@@ -1,7 +1,7 @@
 resource "azurerm_virtual_machine" "front" {
-  name                  = "${var.prefix}-front-vm"
-  location              = "${azurerm_resource_group.default.location}"
-  resource_group_name   = "${azurerm_resource_group.default.name}"
+  name                  = "${terraform.workspace}-front-vm"
+  location              = var.resource_group.location
+  resource_group_name   = var.resource_group.name
   network_interface_ids = ["${azurerm_network_interface.front.id}"]
   vm_size               = "Standard_B1s"
 
@@ -12,30 +12,30 @@ resource "azurerm_virtual_machine" "front" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "${var.prefix}-front-vm"
+    name              = "${terraform.workspace}-front-vm"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "${var.prefix}-front-vm"
-    admin_username = "${var.admin_user}"
+    computer_name  = "${terraform.workspace}-front-vm"
+    admin_username = var.admin_user
   }
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
 	path = "/home/${var.admin_user}/.ssh/authorized_keys"
-	key_data = "${file("/home/${var.admin_user}/.ssh/id_rsa.pub")}"
+	key_data = file(pathexpand("~/.ssh/id_rsa.pub"))
 	}
   }
   tags = {
-    environment = "staging"
+    environment = terraform.workspace
   }
 	connection {
 		type = "ssh"
-		user = "${var.admin_user}"
-		private_key = file("/home/${var.admin_user}/.ssh/id_rsa")
-		host = "${azurerm_public_ip.front.fqdn}"
+		user = var.admin_user
+		private_key = file(pathexpand("~/.ssh/id_rsa"))
+		host = azurerm_public_ip.front.fqdn
   }
   provisioner "remote-exec" {
 	  inline = [
@@ -47,9 +47,9 @@ resource "azurerm_virtual_machine" "front" {
 }
 
 resource "azurerm_virtual_machine" "back" {
-  name                  = "${var.prefix}-back-vm"
-  location              = "${azurerm_resource_group.default.location}"
-  resource_group_name   = "${azurerm_resource_group.default.name}"
+  name                  = "${terraform.workspace}-back-vm"
+  location              = var.resource_group.location
+  resource_group_name   = var.resource_group.name
   network_interface_ids = ["${azurerm_network_interface.back.id}"]
   vm_size               = "Standard_B1s"
 
@@ -60,32 +60,32 @@ resource "azurerm_virtual_machine" "back" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "${var.prefix}-back-vm"
+    name              = "${terraform.workspace}-back-vm"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "${var.prefix}-back-vm"
-    admin_username = "${var.admin_user}"
+    computer_name  = "${terraform.workspace}-back-vm"
+    admin_username = var.admin_user
   }
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
         path = "/home/${var.admin_user}/.ssh/authorized_keys"
-        key_data = "${file("/home/${var.admin_user}/.ssh/id_rsa.pub")}"
+        key_data = file(pathexpand("~/.ssh/id_rsa.pub"))
         }
   }
   tags = {
-    environment = "staging"
+    environment = terraform.workspace
   }
  
 }
 
 resource "azurerm_virtual_machine" "manage" {
-  name                  = "${var.prefix}-manage-vm"
-  location              = "${azurerm_resource_group.default.location}"
-  resource_group_name   = "${azurerm_resource_group.default.name}"
+  name                  = "${terraform.workspace}-manage-vm"
+  location              = var.resource_group.location
+  resource_group_name   = var.resource_group.name
   network_interface_ids = ["${azurerm_network_interface.manage.id}"]
   vm_size               = "Standard_B1s"
 
@@ -96,30 +96,30 @@ resource "azurerm_virtual_machine" "manage" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "${var.prefix}-manage-vm"
+    name              = "${terraform.workspace}-manage-vm"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "${var.prefix}-manage-vm"
-    admin_username = "${var.admin_user}"
+    computer_name  = "${terraform.workspace}-manage-vm"
+    admin_username = var.admin_user
   }
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
         path = "/home/${var.admin_user}/.ssh/authorized_keys"
-        key_data = "${file("/home/${var.admin_user}/.ssh/id_rsa.pub")}"
+        key_data = file(pathexpand("~/.ssh/id_rsa.pub"))
         }
   }
   tags = {
-    environment = "staging"
+    environment = terraform.workspace
   }
         connection {
                 type = "ssh"
-                user = "${var.admin_user}"
-                private_key = file("/home/${var.admin_user}/.ssh/id_rsa")
-                host = "${azurerm_public_ip.manage.fqdn}"
+                user = var.admin_user
+                private_key = file(pathexpand("~/.ssh/id_rsa"))
+                host = azurerm_public_ip.manage.fqdn
   }
   provisioner "remote-exec" {
           inline = [
@@ -131,9 +131,9 @@ resource "azurerm_virtual_machine" "manage" {
 }
 
 resource "azurerm_virtual_machine" "data" {
-  name                  = "${var.prefix}-data-vm"
-  location              = "${azurerm_resource_group.default.location}"
-  resource_group_name   = "${azurerm_resource_group.default.name}"
+  name                  = "${terraform.workspace}-data-vm"
+  location              = var.resource_group.location
+  resource_group_name   = var.resource_group.name
   network_interface_ids = ["${azurerm_network_interface.data.id}"]
   vm_size               = "Standard_B1s"
 
@@ -144,24 +144,24 @@ resource "azurerm_virtual_machine" "data" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "${var.prefix}-data-vm"
+    name              = "${terraform.workspace}-data-vm"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "${var.prefix}-data-vm"
-    admin_username = "${var.admin_user}"
+    computer_name  = "${terraform.workspace}-data-vm"
+    admin_username = var.admin_user
   }
   os_profile_linux_config {
     disable_password_authentication = true
     ssh_keys {
         path = "/home/${var.admin_user}/.ssh/authorized_keys"
-        key_data = "${file("/home/${var.admin_user}/.ssh/id_rsa.pub")}"
+        key_data = file(pathexpand("~/.ssh/id_rsa.pub"))
         }
   }
   tags = {
-    environment = "staging"
+    environment = terraform.workspace
   }
 
 }

@@ -1,7 +1,7 @@
 resource "azurerm_network_security_group" "front" {
     name                = "front-door"
-    location            = "${azurerm_resource_group.default.location}"
-    resource_group_name = "${azurerm_resource_group.default.name}"
+    location            = var.resource_group.location
+    resource_group_name = var.resource_group.name
     
     security_rule {
         name                       = "SSH1"
@@ -28,8 +28,8 @@ resource "azurerm_network_security_group" "front" {
 }
 resource "azurerm_network_security_group" "back" {
     name                = "back-door"
-    location            = "${azurerm_resource_group.default.location}"
-    resource_group_name = "${azurerm_resource_group.default.name}"
+    location            = var.resource_group.location
+    resource_group_name = var.resource_group.name
 
     security_rule {
         name                       = "SSH2"
@@ -69,8 +69,8 @@ resource "azurerm_network_security_group" "back" {
 }
 resource "azurerm_network_security_group" "data" {
     name                = "data-door"
-    location            = "${azurerm_resource_group.default.location}"
-    resource_group_name = "${azurerm_resource_group.default.name}"
+    location            = var.resource_group.location
+    resource_group_name = var.resource_group.name
 
     security_rule {
         name                       = "SSH6"
@@ -98,8 +98,8 @@ resource "azurerm_network_security_group" "data" {
 } 
 resource "azurerm_network_security_group" "manage" {
     name                = "manage-door"
-    location            = "${azurerm_resource_group.default.location}"
-    resource_group_name = "${azurerm_resource_group.default.name}"
+    location            = var.resource_group.location
+    resource_group_name = var.resource_group.name
 
     security_rule {
         name                       = "SSH8"
