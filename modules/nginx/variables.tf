@@ -4,6 +4,7 @@ variable "admin_user" {
 variable "prefix" {
 	default = "default"
 }
-variable "certbot_email" {
-	default = "your.email@gmail.com"
-}
+
+variable "resource_group" {}
+
+variable "virtual_network" {}
