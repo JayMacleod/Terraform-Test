@@ -1,6 +1,4 @@
-variable "admin_user" {
-	default = "bob"
-}
+variable "admin_user" {}
 variable "prefix" {
 	default = "default"
 }
