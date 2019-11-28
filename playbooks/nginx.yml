@@ -11,3 +11,11 @@
     service:
       name: nginx
       state: started
+  - name: Config NGINX
+    copy:
+      src: ../resources/nginx.conf
+      dest: /etc/nginx/nginx.conf
+  - name: Reload nginx
+    service:
+      name: nginx
+      state: reloaded
