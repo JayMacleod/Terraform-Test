@@ -40,8 +40,6 @@ resource "azurerm_virtual_machine" "front" {
   provisioner "remote-exec" {
 	  inline = [
 		  "sudo apt update",
-		  "sudo apt install -y nginx",
-      "sudo systemctl enable --now nginx"
 	  ]
   } 
 }
@@ -124,8 +122,6 @@ resource "azurerm_virtual_machine" "manage" {
   provisioner "remote-exec" {
           inline = [
                   "sudo apt update",
-                  "sudo apt install -y nginx",
-      "sudo systemctl enable --now nginx"
           ]
   }
 }
